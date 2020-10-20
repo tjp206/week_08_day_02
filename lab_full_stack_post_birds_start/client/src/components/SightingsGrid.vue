@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { eventBus } from '@/main.js'
+import SightingService from '@/services/SightingService.js'
 import Sighting from './Sighting';
 
 export default {
@@ -12,7 +14,18 @@ export default {
 	components: {
 		'sighting': Sighting
 	},
-	props: ['sightings']
+	props: ['sightings'],
+
+	mounted() {
+	eventBus.$on('sighting-added', (sighting) => {
+		this.sightings.push(sighting)
+	})
+
+	eventBus.$on('sighting-deleted', (id) => {
+      let index = this.sightings.findIndex(sighting => sighting._id === id)
+      this.sightings.splice(index, 1)
+    })
+	}
 }
 </script>
 
